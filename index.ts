@@ -1,7 +1,14 @@
-import { serve } from 'https://deno.land/std@0.166.0/http/server.ts';
+import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
+import { Application, Router } from 'https://deno.land/x/oak@v11.1.0/mod.ts';
+import { getWaterHandler, setWaterHandler } from './handlers.ts';
 
-const handler = (_req: Request) => {
-  return new Response('Deno is cool beans', { status: 200 });
-};
+const app = new Application();
+const router = new Router();
 
-await serve(handler, { port: 3002 });
+router.get('/', getWaterHandler);
+router.post('/water', setWaterHandler);
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+app.listen({ port: 3000 });
